@@ -1,7 +1,9 @@
 using BenchmarkTools
 using TensorKit
 using TensorKit: dim
+using LinearAlgebra.BLAS: BLAS
 using TOML
+using ArgParse
 
 # Utility functions
 # -----------------
@@ -67,9 +69,6 @@ function generate_benchmark!(suite, kind, T, params)
     Dphys = dim.(Vphys)
     Dmps = dim.(Vmps)
     Dmpo = dim.(Vmpo)
-    if max(Dmps...) > 20
-        return nothing
-    end
     suite[(Dphys, Dmps, Dmpo)] = generate_benchmark(T, Vphys, Vmps, Vmpo)
     return suite
 end
@@ -83,10 +82,37 @@ eltypes = (Float64, ComplexF64)
 # Script
 # ------
 
+const argparser = ArgParseSettings()
+@add_arg_table! argparser begin
+    "--blasthreads", "-b"
+    help = "number of threads given to BLAS"
+    arg_type = Int
+    default = Threads.nthreads()
+    "--in"
+    help = "input file"
+    arg_type = String
+    default = filename_in
+    "--out"
+    help = "output file"
+    arg_type = String
+    default = filename_out
+    "--mkl"
+    help = "using MKL"
+    action = :store_true
+end
+
 function (@main)(ARGS=[])
+    settings = parse_args(ARGS, argparser)
+
+    if settings["mkl"]
+        @eval Main using MKL
+    end
+    BLAS.set_num_threads(settings["blasthreads"])
+
     SUITE = BenchmarkGroup()
 
-    allparams = open(filename_in, "r") do io
+    isfile(settings["in"]) || error("invalid input file $(settings["in"])")
+    allparams = open(settings["in"], "r") do io
         return TOML.parse(io)
     end
 
@@ -101,5 +127,6 @@ function (@main)(ARGS=[])
 
     results = run(SUITE; verbose=true)
 
-    BenchmarkTools.save(filename_out, results)
+    isfile(settings["out"]) || error("invalid output file $(settings["out"])")
+    BenchmarkTools.save(settings["out"], results)
 end

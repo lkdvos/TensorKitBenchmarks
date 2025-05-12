@@ -2,7 +2,7 @@
 
 julia_version = "1.11.5"
 manifest_format = "2.0"
-project_hash = "b42602239ceac2539fc6421995e03883aaf4a2d2"
+project_hash = "90865aeae6f6a8a16d5f9674c012b452b14cc3a3"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "e2478490447631aedba0823d4d7a80b2cc8cdb32"
@@ -86,6 +86,12 @@ deps = ["Colors"]
 git-tree-sha1 = "e092fa223bf66a3c41f9c022bd074d916dc303e7"
 uuid = "27a7e980-b3e6-11e9-2bcd-0b925532e340"
 version = "0.4.2"
+
+[[deps.ArgParse]]
+deps = ["Logging", "TextWrap"]
+git-tree-sha1 = "22cf435ac22956a7b45b0168abbc871176e7eecc"
+uuid = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+version = "1.2.0"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
@@ -1139,7 +1145,7 @@ version = "2025.0.1+1"
 deps = ["Accessors", "BlockTensorKit", "Compat", "DocStringExtensions", "HalfIntegers", "KrylovKit", "LinearAlgebra", "LoggingExtras", "OhMyThreads", "OptimKit", "Printf", "Random", "RecipesBase", "TensorKit", "TensorKitManifolds", "TensorOperations", "VectorInterface"]
 path = "dev/MPSKit"
 uuid = "bb1c41ca-d63c-52ed-829e-0820dda26502"
-version = "0.13.0-DEV"
+version = "0.13.1"
 
 [[deps.MPSKitModels]]
 deps = ["LinearAlgebra", "MPSKit", "MacroTools", "PrecompileTools", "TensorKit", "TensorOperations", "TupleTools"]
@@ -1903,6 +1909,11 @@ version = "5.2.0"
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
 uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 version = "1.11.0"
+
+[[deps.TextWrap]]
+git-tree-sha1 = "43044b737fa70bc12f6105061d3da38f881a3e3c"
+uuid = "b718987f-49a8-5099-9789-dcd902bef87d"
+version = "1.0.2"
 
 [[deps.TiffImages]]
 deps = ["ColorTypes", "DataStructures", "DocStringExtensions", "FileIO", "FixedPointNumbers", "IndirectArrays", "Inflate", "Mmap", "OffsetArrays", "PkgVersion", "ProgressMeter", "SIMD", "UUIDs"]
