@@ -3,7 +3,7 @@ using CairoMakie
 using TOML
 using LaTeXStrings
 
-blasthreads = 16
+blasthreads = 1
 filename_in = joinpath(@__DIR__, "hubbard_results")
 filename = filename_in * "_b$blasthreads"
 
@@ -12,6 +12,7 @@ estimator = minimum
 results = only(BenchmarkTools.load(filename * ".json"))
 
 kinds = ["fZ2", "fZ2xU1xU1", "fZ2xU1xSU2", "fZ2xSU2xSU2"]
+labels = [L"$f\mathbb{Z}_2$", L"$f\mathbb{Z}_2 \times U_1 \times U_1$", L"$f\mathbb{Z}_2 \times SU_2 \times SU_2$"]
 
 
 fig = let f = Figure(; size=(800, 600), title="Hubbard")
@@ -22,7 +23,7 @@ fig = let f = Figure(; size=(800, 600), title="Hubbard")
     xlabelsize = ylabelsize = 20
     
     ax1 = Axis(f[1, 1]; xlabel, xscale, ylabel, yscale, title="single-site benchmark", xlabelsize, ylabelsize)
-    for kind in kinds
+    for (kind, label) in zip(kinds, labels)
         group = results["AC"][kind]
         Ds = Int[]
         ts = Float64[]
@@ -34,11 +35,11 @@ fig = let f = Figure(; size=(800, 600), title="Hubbard")
         Ds = Ds[I]
         ts = ts[I]
         
-        scatterlines!(ax1, Ds, ts; label=kind)
+        scatterlines!(ax1, Ds, ts; label)
     end
     
     ax2 = Axis(f[1, 2]; xlabel, xscale, xlabelsize, ylabel, yscale, ylabelsize, title="two-site benchmark")
-    for kind in kinds
+    for (kind, label) in zip(kinds, labels)
         group = results["AC2"][kind]
         Ds = Int[]
         ts = Float64[]
@@ -50,11 +51,12 @@ fig = let f = Figure(; size=(800, 600), title="Hubbard")
         Ds = Ds[I]
         ts = ts[I]
         
-        scatterlines!(ax2, Ds, ts; label=kind)
+        scatterlines!(ax2, Ds, ts; label)
     end
 
     Legend(f[2, :], ax1; orientation=:horizontal)
 
     save(filename * ".pdf", f)
+    save(filename * ".svg", f)
     f
 end

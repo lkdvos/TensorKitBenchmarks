@@ -12,6 +12,7 @@ estimator = minimum
 results = only(BenchmarkTools.load(filename * ".json"))
 
 kinds = ["Trivial", "U1", "SU2"]
+labels = [L"$\mathbb{Z}_1$", L"$U_1$", L"$SU_2$"]
 
 fig = let f = Figure(; size=(800, 600), title="SU(2) Heisenberg")
     xscale = log10
@@ -21,7 +22,7 @@ fig = let f = Figure(; size=(800, 600), title="SU(2) Heisenberg")
     xlabelsize = ylabelsize = 20
     
     ax1 = Axis(f[1, 1]; xlabel, xscale, xlabelsize, ylabel, yscale, ylabelsize, title="single-site benchmark")
-    for kind in kinds
+    for (kind, label) in zip(kinds, labels)
         group = results["AC"][kind]
         Ds = Int[]
         ts = Float64[]
@@ -33,11 +34,11 @@ fig = let f = Figure(; size=(800, 600), title="SU(2) Heisenberg")
         Ds = Ds[I]
         ts = ts[I]
         
-        scatterlines!(ax1, Ds, ts; label=kind)
+        scatterlines!(ax1, Ds, ts; label)
     end
     
     ax2 = Axis(f[1, 2]; xlabel, xscale, xlabelsize, ylabel, yscale, ylabelsize, title="two-site benchmark")
-    for kind in kinds
+    for (kind, label) in zip(kinds, labels)
         group = results["AC2"][kind]
         Ds = Int[]
         ts = Float64[]
@@ -49,11 +50,12 @@ fig = let f = Figure(; size=(800, 600), title="SU(2) Heisenberg")
         Ds = Ds[I]
         ts = ts[I]
         
-        scatterlines!(ax2, Ds, ts; label=kind)
+        scatterlines!(ax2, Ds, ts; label)
     end
     
     Legend(f[2, :], ax1; orientation=:horizontal)
 
     save(filename * ".pdf", f)
+    save(filename * ".svg", f)
     f
 end
